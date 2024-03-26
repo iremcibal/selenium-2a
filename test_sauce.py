@@ -34,12 +34,17 @@ class Test_Sauce:
         actions.perform() #depoladığım aksiyonları çalıştır
         loginButton = WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.ID,"login-button")))
         loginButton.click()
-        baslik =WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.XPATH,"//*[@id='header_container']/div[1]/div[2]/div")))
-        testResult = baslik.text == "Swag Labs"
+        """ baslik =WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.XPATH,"//*[@id='header_container']/div[1]/div[2]/div")))
+        testResult = baslik.text == "Swag Labs" """
+        addToCart = WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.XPATH,"//*[@id='add-to-cart-test.allthethings()-t-shirt-(red)']")))
+        self.driver.execute_script("window.scrollTo(0,500)")
+        addToCart.click()
+        removeButton = WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.XPATH,"//*[@id='remove-test.allthethings()-t-shirt-(red)']")))
+        testResult = removeButton.text == "Remove"
+        sleep(3)
         print(f"TEST SONUCU: {testResult}")
 
 
 
 testClass = Test_Sauce()
-testClass.test_invalid_login()
 testClass.test_valid_login()
