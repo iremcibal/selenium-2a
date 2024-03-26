@@ -4,6 +4,7 @@ from time import sleep
 from selenium.webdriver.support.wait import WebDriverWait #ilgili driverı bekleten yapı
 from selenium.webdriver.support import expected_conditions as ec #beklenen koşullar
 from selenium.webdriver.common.action_chains import ActionChains 
+import pytest
 
 class Test_Demo:
     def deneme():
@@ -20,17 +21,18 @@ class Test_Demo:
     def teardown_method(self):
         self.driver.quit()
 
-    
+    @pytest.mark.skip #tüm testler koşulurken "skip" şeklinde işaretlenen testlerimi atla
     def test_demo(self):
         print("x")
         text = "Hello"
         assert text == "Hello"
 
-    def test_invalid_login(self):
+    @pytest.mark.parametrize("username,password",[("1","1"),("abc","123"),("deneme","secret_sauce")])
+    def test_invalid_login(self,username,password):
         userNameInput = WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.ID,"user-name")))
         passwordInput = WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.ID,"password")))
-        userNameInput.send_keys("1")
-        passwordInput.send_keys("1")
+        userNameInput.send_keys(username)
+        passwordInput.send_keys(password)
         loginButton = WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.ID,"login-button")))
         loginButton.click()
         errorMessage =WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.XPATH,"//*[@id='login_button_container']/div/form/div[3]/h3")))
