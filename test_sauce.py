@@ -39,6 +39,10 @@ class Test_Sauce:
         addToCart = WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.XPATH,"//*[@id='add-to-cart-test.allthethings()-t-shirt-(red)']")))
         self.driver.execute_script("window.scrollTo(0,500)")
         addToCart.click()
+        """ actions2 = ActionChains(self.driver)
+        actions2.move_to_element(addToCart) #butonun olduğu yere sayfayı taşı
+        actions2.click()
+        actions2.perform() """
         removeButton = WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.XPATH,"//*[@id='remove-test.allthethings()-t-shirt-(red)']")))
         testResult = removeButton.text == "Remove"
         sleep(3)
