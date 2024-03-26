@@ -4,12 +4,27 @@ from time import sleep
 from selenium.webdriver.support.wait import WebDriverWait #ilgili driverı bekleten yapı
 from selenium.webdriver.support import expected_conditions as ec #beklenen koşullar
 from selenium.webdriver.common.action_chains import ActionChains 
-#bir zincir misali aksiyonları sıraya koymak
-class Test_Sauce():
-    def __init__(self):
+
+class Test_Demo:
+    def deneme():
+        print("deneme")
+
+    #pytest tarafından tanımlanan bir method 
+    #her test öncesi otomatik olarak çalıştırılır
+    def setup_method(self):
         self.driver = webdriver.Chrome()
         self.driver.maximize_window()
         self.driver.get("https://www.saucedemo.com/")
+
+    #her test bitiminde çalışacak fonk
+    def teardown_method(self):
+        self.driver.quit()
+
+    
+    def test_demo(self):
+        print("x")
+        text = "Hello"
+        assert text == "Hello"
 
     def test_invalid_login(self):
         userNameInput = WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.ID,"user-name")))
@@ -19,10 +34,7 @@ class Test_Sauce():
         loginButton = WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.ID,"login-button")))
         loginButton.click()
         errorMessage =WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.XPATH,"//*[@id='login_button_container']/div/form/div[3]/h3")))
-        #print(errorMessage.text)
-        testResult = errorMessage.text == "Epic sadface: Username and password do not match any user in this service"
-        print(f"TEST SONUCU: {testResult}")
-
+        assert errorMessage.text == "Epic sadface: Username and password do not match any user in this service"
 
     def test_valid_login(self):
         self.driver.get("https://www.saucedemo.com/")
@@ -34,16 +46,7 @@ class Test_Sauce():
         actions.perform() #depoladığım aksiyonları çalıştır
         loginButton = WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.ID,"login-button")))
         loginButton.click()
-        """ baslik =WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.XPATH,"//*[@id='header_container']/div[1]/div[2]/div")))
-        testResult = baslik.text == "Swag Labs" """
-        addToCart = WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.XPATH,"//*[@id='add-to-cart-test.allthethings()-t-shirt-(red)']")))
-        self.driver.execute_script("window.scrollTo(0,500)")
-        addToCart.click()
-        """ actions2 = ActionChains(self.driver)
-        actions2.move_to_element(addToCart) #butonun olduğu yere sayfayı taşı
-        actions2.click()
-        actions2.perform() """
-        removeButton = WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.XPATH,"//*[@id='remove-test.allthethings()-t-shirt-(red)']")))
-        testResult = removeButton.text == "Remove"
-        sleep(3)
-        print(f"TEST SONUCU: {testResult}")
+        baslik =WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.XPATH,"//*[@id='header_container']/div[1]/div[2]/div")))
+        assert baslik.text == "Swag Labs"
+        
+        
