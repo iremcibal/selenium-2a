@@ -46,13 +46,17 @@ class Test_Demo:
     
     @pytest.mark.parametrize("username,password",readInvalidDataFromExcel())
     def test_invalid_login(self,username,password):
-        userNameInput = WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.ID,username_id)))
-        passwordInput = WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.ID,password_id)))
+        #userNameInput = WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.ID,username_id)))
+        userNameInput = self.waitForElementVisible((By.ID,username_id))
+        #passwordInput = WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.ID,password_id)))
+        passwordInput = self.waitForElementVisible((By.ID,password_id))
         userNameInput.send_keys(username)
         passwordInput.send_keys(password)
-        loginButton = WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.ID,login_button_id)))
+        #loginButton = WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.ID,login_button_id)))
+        loginButton = self.waitForElementVisible((By.ID,login_button_id))
         loginButton.click()
-        errorMessage =WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.XPATH,errorMessage_xpath)))
+        #errorMessage =WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.XPATH,errorMessage_xpath)))
+        errorMessage = self.waitForElementVisible((By.ID,errorMessage_xpath))
         assert errorMessage.text == errorMessage_text
 
     def test_valid_login(self):
@@ -68,4 +72,5 @@ class Test_Demo:
         baslik =WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.XPATH,"//*[@id='header_container']/div[1]/div[2]/div")))
         assert baslik.text == "Swag Labs"
         
-        
+    def waitForElementVisible(self,locator,timeout=5):
+        WebDriverWait(self.driver,timeout).until(ec.visibility_of_element_located(locator))
