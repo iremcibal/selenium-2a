@@ -5,6 +5,7 @@ from selenium.webdriver.support.wait import WebDriverWait #ilgili driverı bekle
 from selenium.webdriver.support import expected_conditions as ec #beklenen koşullar
 from selenium.webdriver.common.action_chains import ActionChains 
 import pytest
+import openpyxl
 
 class Test_Demo:
     def deneme():
@@ -30,7 +31,19 @@ class Test_Demo:
     def getData():
         return [("1","1"),("abc","123"),("deneme","secret_sauce")]
     
-    @pytest.mark.parametrize("username,password",getData())
+    def readInvalidDataFromExcel():
+        excelFile = openpyxl.load_workbook("data/invalidLogin.xlsx")
+        sheet = excelFile["Sheet1"]
+        rows = sheet.max_row #kaçıncı satıra kadar benim verim var
+        data = []
+        for i in range(2,rows+1):
+            username = sheet.cell(i,1).value
+            password = sheet.cell(i,2).value
+            data.append((username,password))
+        return data
+
+    
+    @pytest.mark.parametrize("username,password",readInvalidDataFromExcel())
     def test_invalid_login(self,username,password):
         userNameInput = WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.ID,"user-name")))
         passwordInput = WebDriverWait(self.driver,5).until(ec.visibility_of_element_located((By.ID,"password")))
